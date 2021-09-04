@@ -2,7 +2,7 @@
 {% block content %}
 {% for p in bps %}
     <div class="blog">
-        <h1 class="blog-title"> {{p.title}} </h2>
+        <h1 class="blog-title"> <a href="{% url 'viewblog' pk=p.pk %}"> {{p.title}} </a> </h2>
         <p class="blog-content"> {{p.text}} </p>
     </div>
 {% endfor %}
