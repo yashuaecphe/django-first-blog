@@ -1,0 +1,8 @@
+{% extends 'myblogapp/base.html' %}
+{% block content %}
+    <div class="blog-writer">
+        <form method="POST" class="post-form"> {% csrf_token %}
+        {{ blogform.as_p}}
+        <button type="submit">Write</button>
+    </div>
+{% endblock %}
