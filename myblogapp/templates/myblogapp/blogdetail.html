@@ -3,8 +3,16 @@
     <div class="blog">
         <h2 class="blog-title"> {{p.title}} </h2>
         <div> 
-            {{p.author}} 
-            <a href="{% url 'editblog' pk=p.pk %}"> EDIT </a>
+            by {{p.author}} 
+            <div class="post-actions">
+                {% if p.published_date is None %}
+                    <a href="{% url 'publishblog' pk=p.pk%}"> PUBLISH </a>
+                {% else %}
+                    Published: {{ p.published_date }}
+                {% endif %}
+                <a href="{% url 'editblog' pk=p.pk %}"> EDIT </a>
+                <a href="{% url 'deleteblog' pk=p.pk%}"> DELETE </a>
+            </div>
         </div>
         
         <p class="blog-content"> {{p.text}} </p>

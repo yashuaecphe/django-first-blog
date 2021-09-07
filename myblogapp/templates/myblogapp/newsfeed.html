@@ -1,8 +1,14 @@
 {% extends 'myblogapp/base.html' %}
 {% block content %}
+
 {% for p in bps %}
+    <div class="view-toggle">
+        
+    </div>
+
     <div class="blog">
         <h1 class="blog-title"> <a href="{% url 'viewblog' pk=p.pk %}"> {{p.title}} </a> </h2>
+        <div class="published_date"> published: {{p.published_date}} </div>
         <p class="blog-content"> {{p.text}} </p>
     </div>
 {% endfor %}

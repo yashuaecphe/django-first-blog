@@ -1,0 +1,28 @@
+*{
+    background-color: #008080;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding:0px;
+    margin:0px;
+}
+/*PAGE HEADER STUFF*/
+.page-header{
+    background-color: #c0c0c0;
+    border-width: 0px 0px 5px 0px;
+    border-style:solid;
+    border-color:#a0a0a0;
+}
+.page-header > a{
+    background-color: transparent;
+    color: #000000;
+    font-size:30px;
+    text-decoration: none;
+    font-weight:900;
+}
+.page-header > :not(a:first-child){
+    font-weight:100;
+    font-size:20px;
+}
+
+blog{
+    background-color: #c0c0c0;
+}
