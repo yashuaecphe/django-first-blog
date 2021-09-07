@@ -12,6 +12,20 @@ def view_blogpost(request, pk):
     blogpost = get_object_or_404(BlogPost, pk=pk)
     return render(request, 'myblogapp/blogdetail.html',{'p':blogpost})
 
+def edit_blogpost(request, pk):
+    post = get_object_or_404(BlogPost, pk=pk);
+    if request.method=="POST":
+        form = BlogPostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published_date = timezone.now()
+            post.save()
+            return redirect('viewblog',pk=post.pk)
+    else:
+        form = BlogPostForm(instance=post)
+    return render(request, 'myblogapp/blogwriter.html',{'blogform': form})
+
 def write_blogpost(request):
     if request.method == "POST": #when you press the submit button for the write form
         form = BlogPostForm(request.POST)

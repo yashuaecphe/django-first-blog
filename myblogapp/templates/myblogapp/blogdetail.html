@@ -1,7 +1,12 @@
 {% extends 'myblogapp/base.html' %}
 {% block content %}
     <div class="blog">
-        <h1 class="blog-title"> {{p.title}} </h2>
+        <h2 class="blog-title"> {{p.title}} </h2>
+        <div> 
+            {{p.author}} 
+            <a href="{% url 'editblog' pk=p.pk %}"> EDIT </a>
+        </div>
+        
         <p class="blog-content"> {{p.text}} </p>
     </div>
 {% endblock %}
