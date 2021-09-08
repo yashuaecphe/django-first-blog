@@ -10,11 +10,11 @@
     </div>
 
 {% for p in bps %}
-    
-
     <div class="blog">
         <h1 class="blog-title"> <a href="{% url 'viewblog' pk=p.pk %}"> {{p.title}} </a> </h2>
-        <div class="published_date"> published: {{p.published_date}} </div>
+        {% if not is_drafts %}
+            <div class="published_date"> published: {{p.published_date}} </div>
+        {% endif %}
         <p class="blog-content"> {{p.text}} </p>
     </div>
 {% endfor %}

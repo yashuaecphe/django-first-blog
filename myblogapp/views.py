@@ -10,7 +10,7 @@ def blog_feed(request):
     return render(request, 'myblogapp/newsfeed.html',{'bps':blogposts, 'is_drafts':False})
 
 def draft_feed(request):
-    blogposts = BlogPost.objects.filter(published_date=None)
+    blogposts = BlogPost.objects.filter(published_date=None).order_by('-created_date')
     return render(request, 'myblogapp/newsfeed.html',{'bps':blogposts, 'is_drafts':True})
 
 def view_blogpost(request, pk):
@@ -39,7 +39,7 @@ def save_blogpost_as_draft(request):
             post.author = request.user #who is the user that requested this thing
             #post.published_date = timezone.now()
             post.save()
-            return redirect('blog_newsfeed')
+            return view_blogpost(request,post.pk)
 
     else: #when you click the ADD button
         form = BlogPostForm()
