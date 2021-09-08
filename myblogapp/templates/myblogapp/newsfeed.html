@@ -14,7 +14,7 @@
         <h1 class="blog-title"> <a href="{% url 'viewblog' pk=p.pk %}"> {{p.title}} </a> </h2>
         {% if not is_drafts %}
             <div class="published_date"> published: {{p.published_date}} </div>
-            Comments: {{ p.comments.count }}
+            Comments: {{ p.approved_comments.count }}
         {% endif %}
         <p class="blog-content"> {{p.text}} </p>
     </div>
