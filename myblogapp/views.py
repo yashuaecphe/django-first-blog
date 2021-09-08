@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import BlogPost
@@ -5,9 +6,12 @@ from .forms import BlogPostForm
 
 # Create your views here.
 def blog_feed(request):
-    #blogposts = BlogPost.objects.filter(published_date__lte=timezone.now()).order_by('-created_date')
-    blogposts = BlogPost.objects.all().order_by('-created_date')
-    return render(request, 'myblogapp/newsfeed.html',{'bps':blogposts})
+    blogposts = BlogPost.objects.filter(published_date__lte=timezone.now()).order_by('-created_date')
+    return render(request, 'myblogapp/newsfeed.html',{'bps':blogposts, 'is_drafts':False})
+
+def draft_feed(request):
+    blogposts = BlogPost.objects.filter(published_date=None)
+    return render(request, 'myblogapp/newsfeed.html',{'bps':blogposts, 'is_drafts':True})
 
 def view_blogpost(request, pk):
     blogpost = get_object_or_404(BlogPost, pk=pk)
