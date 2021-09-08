@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from .models import BlogPost
-from .forms import BlogPostForm
+from .models import BlogPost, BlogComment
+from .forms import BlogPostForm, BlogCommentForm
 
 # Create your views here.
 def blog_feed(request):
@@ -57,3 +57,28 @@ def publish_blogpost(request,pk):
 def delete_blogpost(request,pk):
     BlogPost.objects.get(pk=pk).delete()
     return redirect('blog_newsfeed')
+
+def add_comment_to_blogpost(request, pk):
+    post = get_object_or_404(BlogPost, pk=pk)
+    if request.method=="POST":
+        form = BlogCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+            return view_blogpost(request,pk)
+    else:
+        form = BlogCommentForm()
+    return render(request, 'myblogapp/add_comment_to_blogpost.html',{'form': form})
+
+@login_required
+def comment_approve(request, pk):
+    comment = get_object_or_404(BlogComment, pk=pk)
+    comment.approve()
+    return view_blogpost(request,comment.post.pk)
+
+@login_required
+def comment_remove(request, pk):
+    comment = get_object_or_404(BlogComment, pk=pk)
+    comment.delete()
+    return view_blogpost(request,comment.post.pk)
