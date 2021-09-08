@@ -17,6 +17,7 @@ def view_blogpost(request, pk):
     blogpost = get_object_or_404(BlogPost, pk=pk)
     return render(request, 'myblogapp/blogdetail.html',{'p':blogpost})
 
+@login_required
 def edit_blogpost(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
     if request.method=="POST":
@@ -31,6 +32,7 @@ def edit_blogpost(request, pk):
         form = BlogPostForm(instance=post)
         return render(request, 'myblogapp/blogwriter.html',{'blogform': form})
 
+@login_required
 def save_blogpost_as_draft(request):
     if request.method == "POST": #when you press the submit button for the write form
         form = BlogPostForm(request.POST)
@@ -46,10 +48,12 @@ def save_blogpost_as_draft(request):
         return render(request, 'myblogapp/blogwriter.html',{'blogform': form})
         #render a form for writing blog
 
+@login_required
 def publish_blogpost(request,pk):
     BlogPost.objects.get(pk=pk).publish()
     return view_blogpost(request,pk)
 
+@login_required
 def delete_blogpost(request,pk):
     BlogPost.objects.get(pk=pk).delete()
     return redirect('blog_newsfeed')

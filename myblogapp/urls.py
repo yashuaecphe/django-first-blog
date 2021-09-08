@@ -8,5 +8,6 @@ urlpatterns = [
     path('write', views.save_blogpost_as_draft, name='write_blogpost' ),
     path('editblogpost/<int:pk>', views.edit_blogpost,name='editblog'),
     path('publishblogpost/<int:pk>', views.publish_blogpost, name='publishblog'),
-    path('deleteblog/<int:pk>', views.delete_blogpost, name='deleteblog')
+    path('deleteblog/<int:pk>', views.delete_blogpost, name='deleteblog'),
+    
 ]
