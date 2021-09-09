@@ -2,10 +2,12 @@
 {% block content %}
 
 <div class="view-toggle">
-        {% if is_drafts %}
-            <a href="{% url 'blog_newsfeed' %}">view published blogposts</a>
-        {% else %}
-            <a href="{% url 'draft_newsfeed' %}">view unpublished blogposts</a>
+        {% if user.is_authenticated %}
+            {% if is_drafts %}
+                <a href="{% url 'blog_newsfeed' %}">view published blogposts</a>
+            {% else %}
+                <a href="{% url 'draft_newsfeed' %}">view unpublished blogposts</a>
+            {% endif %}
         {% endif %}
     </div>
 
