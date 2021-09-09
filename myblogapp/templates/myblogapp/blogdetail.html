@@ -16,21 +16,24 @@
         </div>
         
         <p class="blog-content"> {{p.text}} </p>
-        <a class="btn btn-default" href="{% url 'add_comment_to_blogpost' pk=p.pk %}">Add Comment</a>
-        {% for comment in p.comments.all %}
-            {% if user.is_authenticated or comment.approved_comment %}
-                <div class="comment">
-                    <div class="date">{{ comment.created_date }} </div>
-                    {% if not comment.approved_comment %}
-                        <a href="{% url 'comment_remove' pk=comment.pk %}">Remove</a>
-                        <a href="{% url 'comment_approve' pk=comment.pk %}">Approve</a>
-                    {% endif %}
-                    <strong>{{ comment.author }}</strong>
-                    <p>{{ comment.text|linebreaks}}</p>
-                </div>
-            {% endif %}
-        {% empty %}
-            <p>No comments here yet :( </p>
-        {% endfor %}
+        
+        {% if not p.published_date is None %}
+            <a class="btn btn-default" href="{% url 'add_comment_to_blogpost' pk=p.pk %}">Add Comment</a>
+            {% for comment in p.comments.all %}
+                {% if user.is_authenticated or comment.approved_comment %}
+                    <div class="comment">
+                        <div class="date">{{ comment.created_date }} </div>
+                        {% if not comment.approved_comment %}
+                            <a href="{% url 'comment_remove' pk=comment.pk %}">Remove</a>
+                            <a href="{% url 'comment_approve' pk=comment.pk %}">Approve</a>
+                        {% endif %}
+                        <strong>{{ comment.author }}</strong>
+                        <p>{{ comment.text|linebreaks}}</p>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <p>No comments here yet :( </p>
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}
