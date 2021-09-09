@@ -20,6 +20,5 @@ from django.contrib.auth import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('myblogapp.urls')),
-    #path('accounts/login/' views.LoginView.as_view(), name='login')
 ]
 

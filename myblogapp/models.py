@@ -18,9 +18,6 @@ class BlogPost(models.Model):
     
     def __str__(self):
         return self.title
-    
-    def approved_comments(self):
-        return self.comments.filter(approved_comment=True)
 
 class BlogComment(models.Model):
     post = models.ForeignKey('myblogapp.BlogPost', on_delete=models.CASCADE, related_name='comments')
