@@ -13,10 +13,10 @@
 
 {% for p in bps %}
     <div class="blog">
-        <h1 class="blog-title"> <a href="{% url 'viewblog' pk=p.pk %}"> {{p.title}} </a> </h2>
+        <a href="{% url 'viewblog' pk=p.pk %}" class="blog-title"> {{p.title}} </a>
         {% if not is_drafts %}
-            <div class="published_date"> published: {{p.published_date}} </div>
-            Comments: {{ p.comments.count }}
+            <div class="published_date">Published: {{p.published_date|date:"y/m/d H:i"}} </div>
+            <div class="comments-label">with {{ p.comments.count }} comments</div>
         {% endif %}
         <p class="blog-content"> {{p.text}} </p>
     </div>

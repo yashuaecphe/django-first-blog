@@ -7,11 +7,12 @@
             <div class="post-actions">
                 {% if p.published_date is None %}
                     <a href="{% url 'publishblog' pk=p.pk%}"> PUBLISH </a>
+                    <a href="{% url 'editblog' pk=p.pk %}"> EDIT </a>
+                    <a href="{% url 'deleteblog' pk=p.pk%}"> DELETE </a>
                 {% else %}
                     Published: {{ p.published_date }}
                 {% endif %}
-                <a href="{% url 'editblog' pk=p.pk %}"> EDIT </a>
-                <a href="{% url 'deleteblog' pk=p.pk%}"> DELETE </a>
+                
             </div>
         </div>
         
@@ -22,7 +23,7 @@
             {% for comment in p.comments.all %}
                 {% if user.is_authenticated or comment.approved_comment %}
                     <div class="comment">
-                        <div class="date">{{ comment.created_date }} </div>
+                        <div class="published_date">{{ comment.created_date }} </div>
                         {% if not comment.approved_comment %}
                             <a href="{% url 'comment_remove' pk=comment.pk %}">Remove</a>
                             <a href="{% url 'comment_approve' pk=comment.pk %}">Approve</a>

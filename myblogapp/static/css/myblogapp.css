@@ -1,28 +1,95 @@
-*{
-    background-color: #eeeeee;
-    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    padding:0px;
-    margin:0px;
-}
-/*PAGE HEADER STUFF*/
-.page-header{
-    background-color: #c0c0c0;
-    border-width: 0px 0px 5px 0px;
-    border-style:solid;
-    border-color:#a0a0a0;
-}
-.page-header > a{
-    background-color: transparent;
-    color: #000000;
-    font-size:30px;
-    text-decoration: none;
-    font-weight:900;
-}
-.page-header > :not(a:first-child){
-    font-weight:100;
-    font-size:20px;
+* {
+    background-color: #008080;
+    font-family: monospace;
+    padding: 0px;
+    margin: 0px;
 }
 
-blog{
+a {
+    text-decoration: none;
+    color: #000000;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 100px;
+    /*remove all underlines for all links*/
+}
+
+.page-header,
+.page-header>* {
     background-color: #c0c0c0;
+    color: #000000;
+    font-size: 15px;
+    font-weight: 100;
+}
+
+.page-header>*:first-child {
+    font-weight: 900;
+    font-size: 20px;
+}
+
+
+/*for all links on the header*/
+
+.page-header>a {
+    border-width: 3px;
+    border-style: ridge;
+    border-color: #e0e0e0 #404040 #404040 #e0e0e0;
+    padding: 5px;
+}
+
+.page-header>a:hover {
+    border-color: #404040 #e0e0e0 #e0e0e0 #404040;
+    padding: 4px;
+    border-width: 4px;
+}
+
+.page-header {
+    /* top header decoration */
+    padding: 12px 12px 12px 4px;
+    border-style: ridge;
+    border-color: #e0e0e0;
+    border-width: 0px 0px 5px 0px;
+}
+
+
+/****** stuff ******/
+
+.blog,
+.blog>* {
+    background-color: #c0c0c0;
+}
+
+.blog {
+    border-width: 3px;
+    border-style: ridge;
+    border-color: #e0e0e0 #404040 #404040 #e0e0e0;
+    margin: 0.8%;
+    width: 45%;
+    display: inline-block;
+}
+
+.blog>.published_date,
+.blog>.comments-label {
+    display: inline;
+    background: transparent;
+}
+
+.blog>.blog-title {
+    display: block;
+    width: 100%;
+    background-color: #808080;
+    color: #000000;
+}
+
+.blog>.blog-title:hover {
+    background-color: #000080;
+    color: #ffffff;
+}
+
+.blog>.blog-content {
+    background-color: #ffffff;
+    padding: 1.5%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #606060 #e0e0e0 #e0e0e0 #606060;
 }

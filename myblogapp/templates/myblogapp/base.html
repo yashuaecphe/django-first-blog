@@ -2,18 +2,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title> MyBlogApp</title>
-    
+    <title> djdols-blog </title>
+    <link rel="stylesheet" href="{% static 'css/myblogapp.css' %}">
 </head>
 <body>
     <div class="page-header">
-        <a href="/" class="page-title"> MyBlogApp </a>
+        <a href="/" class="page-title">djdols-blog</a>
         {% if user.is_authenticated %}
-            <a href="{% url 'write_blogpost' %}" class="page-add"> ADD </a> 
             <span> Hello {{ user.username }}</span>
-            <a href="{% url 'logout' %}"> LOGOUT </a>
+            <a href="{% url 'write_blogpost' %}" class="page-add">new post</a> 
+            <a href="{% url 'logout' %}">logout</a>
         {% else %}
-            <a href="{% url 'login' %}">LOGIN</a>
+            <a href="{% url 'login' %}">login</a>
         {% endif %}
     </div>
 
