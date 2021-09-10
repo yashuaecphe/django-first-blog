@@ -1,3 +1,2 @@
-workingbranch
-This branch serves as my baseline, everything is functional
-No heroku deployment
+# master
+This is the branch that is deployed to heroku
