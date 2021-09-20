@@ -38,3 +38,15 @@ class BlogDetail(APIView):
         serializer = BlogpostSerializer(self.get_object(pk))
         return Response(serializer.data)
     
+    def put(self, request, pk, format=None):
+        """http PUT http:127.0.0.1:8000/api/blogposts/<int>/ the=required fields=value"""
+        serializer = BlogpostSerializer(self.get_object(pk), data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, format=None):
+        """http DELETE http://127.0.0.1:8000/api/blogposts/<int>/"""
+        self.get_object(pk).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
