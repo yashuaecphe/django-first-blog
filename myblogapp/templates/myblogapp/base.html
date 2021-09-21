@@ -2,12 +2,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title> hello world </title>
+    <title>djangoblog</title>
     <link rel="stylesheet" href="{% static 'css/myblogapp.css' %}">
 </head>
 <body>
     <div class="page-header">
-        <a href="/" class="page-title">djdols-blog</a>
+        <a href="/" class="page-title">hello world</a>
         {% if user.is_authenticated %}
             <span> Hello {{ user.username }}</span>
             <a href="{% url 'write_blogpost' %}" class="page-add">new post</a> 
