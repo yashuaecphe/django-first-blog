@@ -1,3 +1,6 @@
-workingbranch
-This branch serves as my baseline, everything is functional
-No heroku deployment
+superusers:
+    djdols,djdols
+    admin,admin1234
+    
+This branch has apis now
+
