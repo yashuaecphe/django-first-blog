@@ -28,6 +28,7 @@ class BlogDetail(APIView):
     """ GET, PUT, or DELETE blog instance"""
 
     def get_object(self,pk):
+        """called by other functions how do i private doe"""
         try:
             return BlogPost.objects.get(pk=pk)
         except BlogPost.DoesNotExist:
