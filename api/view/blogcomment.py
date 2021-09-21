@@ -14,9 +14,21 @@ class Comments(APIView):
             raise Http404
         
     def get(self, request, pk, format=None):
+        """http http://ip:port/api/blogpost/<int>/comments
+            returns a list of comments under the blogpost with pk=pk
+        """
         bp = self.get_blogpost(pk)
         comments = BlogComment.objects.filter(post=bp)
         serializer = BlogcommentSerializer(comments, many=True)
         return Response(serializer.data)
-
-    #def post(self,request,pk,format=None):pass
+    
+    def post(self, request, pk, format=None):
+        """http http://ip:port/api/blogpost/<int>/comments
+            returns a list of comments under the blogpost with pk=pk
+        """
+        serializer = BlogcommentSerializer(data=request.data, context={'request':request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
