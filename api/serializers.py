@@ -16,5 +16,7 @@ class BlogpostSerializer(serializers.ModelSerializer):
         model = BlogPost
         fields = ['author','title','text','created_date','published_date']
 
-
-
+class BlogcommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogComment
+        fields = ['author','post','text','created_date','approved_comment']

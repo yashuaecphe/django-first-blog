@@ -51,3 +51,4 @@ class BlogDetail(APIView):
         """http DELETE http://127.0.0.1:8000/api/blogposts/<int>/"""
         self.get_object(pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
