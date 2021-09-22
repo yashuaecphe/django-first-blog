@@ -23,6 +23,5 @@ urlpatterns = [
     path('accounts/logout/',views.LogoutView.as_view(next_page='/'), name='logout'),
     path('', include('myblogapp.urls')),
     path('api/', include('api.urls')),
-    path('api-auth', include('rest_framework.urls'))
 ]
 
