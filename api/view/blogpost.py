@@ -14,7 +14,6 @@ class BlogFeed(APIView):
     For public viewing published blogposts
     """
     def get(self, request, format=None):
-        """http http://127.0.0.1:8000/api/blogposts/"""
         blogposts = BlogPost.objects.all().filter(published_date__lte=timezone.now())
         serializer = BlogpostSerializer(blogposts, many=True)
         return Response(serializer.data)
@@ -46,7 +45,7 @@ class BlogCreateOrList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class BlogDetail(APIView):
-    """AUTH api/blogposts/<int>/
+    """AUTH api/blogpost/<int>/
        updating or deleting a blogpost
     """
     authentication_classes = [SessionAuthentication, BasicAuthentication]

@@ -23,8 +23,8 @@ class Comments(APIView):
         return Response(serializer.data)
     
     def post(self, request, pk, format=None):
-        """http http://ip:port/api/blogpost/<int>/comments
-            returns a list of comments under the blogpost with pk=pk
+        """http http://ip:port/api/blogpost/<int>/comments field1=var1 field2=var2...
+            adds a comment
         """
         serializer = BlogcommentSerializer(data=request.data, context={'request':request})
         if serializer.is_valid():
