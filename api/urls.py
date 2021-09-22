@@ -11,7 +11,7 @@ urlpatterns = [
     path('blogpost/<int:pk>/', BlogDetail.as_view(), name='blog'),
     path('blogpost/<int:pk>/comments/', Comments.as_view()),
     path('api-auth/', include('rest_framework.urls')),
-    path('api-token-auth/', create_auth_token)
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

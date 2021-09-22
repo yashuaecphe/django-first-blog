@@ -1,6 +1,6 @@
 
 from api.serializers import BlogpostSerializer
-from django.http import Http404, Http403
+from django.http import Http404
 from django.utils import timezone
 from myblogapp.models import BlogPost
 from rest_framework.views import APIView
@@ -62,8 +62,7 @@ class BlogDetail(APIView):
         blogpost = self.get_object(pk)
         serializer = BlogpostSerializer(blogpost)
         if (blogpost.published_date is None) and (request.user!=blogpost.author): #post is unpublished
-            #return Response(data={"detail":"You are not authorized to view this unpublished post"},status=status.HTTP_403_FORBIDDEN)
-            raise Http403
+            return Response(data={"detail":"You are not authorized to view this unpublished post"},status=status.HTTP_403_FORBIDDEN)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
