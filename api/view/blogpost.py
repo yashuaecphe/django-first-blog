@@ -17,8 +17,8 @@ class BlogPostsAPI(APIView):
     api/blogposts/
         Get list of blogposts or make a new one.
     """
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, format=None):
         """

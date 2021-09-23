@@ -6,10 +6,11 @@ from rest_framework.response import Response
 from rest_framework import status
 
 class Comments(APIView):
-    """comments api endpoint
-        - GET list of comments
-        - POST a comment
     """
+    /api/blogpost/<int:pk>/comments/
+        For getting list of comments at a certain blogpost or making a new comment. 
+    """
+
     def get_blogpost(self, pk):
         try:
             return BlogPost.objects.get(pk=pk)
@@ -19,6 +20,8 @@ class Comments(APIView):
     def get(self, request, pk, format=None):
         bp = self.get_blogpost(pk)
         comments = BlogComment.objects.filter(post=bp)
+        if (not request.user.is_authenticated) or (request.user!=bp.author):
+            comments = comments.filter(approved_comment=True)
         serializer = BlogcommentSerializer(comments, many=True)
         return Response(serializer.data)
     
