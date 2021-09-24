@@ -2,9 +2,9 @@
 from django.urls import path,include
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from api.view.blogpost import BlogPostsAPI, BlogPostAPI
-from api.view.blogcomment import Comments
-from api.view.auth import UserList, ObtainAuthenticationToken
+from api.views.blogpost import BlogPostsAPI, BlogPostAPI
+from api.views.blogcomment import Comments
+from api.views.auth import UserList, ObtainAuthenticationToken
 
 urlpatterns = [
     path('blogposts/', BlogPostsAPI.as_view(), name='blogs'),

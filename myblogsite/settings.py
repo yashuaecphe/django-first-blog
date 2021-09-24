@@ -85,7 +85,7 @@ DATABASES = {
         'PASSWORD':'djdols',
         'HOST':'localhost',
         'PORT':'',
-    }
+    },
 }
 
 

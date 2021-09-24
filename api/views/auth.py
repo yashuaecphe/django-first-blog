@@ -21,11 +21,14 @@ class ObtainAuthenticationToken(ObtainAuthToken):
         """ POST user for user parameters
             but this won't save anything, it will simply generate the user's tokens and return it. 
         """
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response(data={
-            'token': token.key,
-            'user': request.data['username']
-        })
+        try:
+            serializer = self.serializer_class(data=request.data, context={'request': request})
+            serializer.is_valid(raise_exception=True)
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
+            return Response(data={
+                'token': token.key,
+                'user': request.data['username']
+            })
+        except:
+            return Response(data={'message':'Invalid username/password'},status=401)
