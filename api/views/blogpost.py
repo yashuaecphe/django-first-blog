@@ -82,15 +82,15 @@ class BlogPostAPI(APIView):
             requires authentication and that the user should be the author of that post
             the request.user will be the author of that post
         """
-        owner_of_postdelete = self.get_object(pk).author
-        if request.user==owner_of_postdelete: #authorized user is the author of the post
+        owner_of_postupdate = self.get_object(pk).author
+        if request.user==owner_of_postupdate: #authorized user is the author of the post
             serializer = BlogpostSerializer(self.get_object(pk), data=request.data)  
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(data={"detail":"You are not authorized to PUT this blogpost"}, status=status.HTTP_403_FORBIDDEN)
+            return Response(data={"detail":"You are not authorized to update this blogpost"}, status=status.HTTP_403_FORBIDDEN)
     
     def delete(self, request, pk, format=None):
         """
@@ -103,4 +103,4 @@ class BlogPostAPI(APIView):
             self.get_object(pk).delete()
             return Response(data={"detail":f"Deleted post {pk} successfully"}, status=status.HTTP_200_OK)
         else:
-            return Response(data={"detail":"You are not authorized to DELETE this blogpost"}, status=status.HTTP_403_FORBIDDEN)
+            return Response(data={"detail":"You are not authorized to delete this blogpost"}, status=status.HTTP_403_FORBIDDEN)

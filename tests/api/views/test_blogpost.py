@@ -103,7 +103,6 @@ class TestBlogpost(APITestCase):
         self.published_blogpost_test = BlogPost.objects.create(author=self.testuser, title="published_blogpost_title",text="published_blogpost_text", published_date=timezone.now())
         self.unpublished_blogpost_test = BlogPost.objects.create(author=self.testuser, title="unpublished_blogpost_title", text="unpublished_blogpost_text")
 
-    
     def test_viewing_published_blogpost_unauthorized(self)->None:
         """Un/Auth, you can view ANY published blogpost"""
         expected_response_data = {
@@ -145,7 +144,6 @@ class TestBlogpost(APITestCase):
         self.assertEqual(response.data["title"], expected_response_data["title"])
         self.assertEqual(response.status_code, 200)
 
-
     def test_viewing_unpublished_blogpost_AUTH(self)->None:
         """view an unpublished blogpost as some other user."""
         request = self.factory.get(self.api_path)
@@ -162,4 +160,72 @@ class TestBlogpost(APITestCase):
         
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.data, {"detail":"You are not authorized to view this unpublished post"})
+    
+    def test_viewing_non_existent_blogpost(self)->None:
+        """view a blogpost that does not exist."""
+        request = self.factory.get(self.api_path)
+        response = self.view(request, pk=0)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data, {"detail":"Not found."})
+    
+    def test_updating_blogpost_OWNER(self)->None:
+        """update a blogpost as an owner"""
+        expected_response_data = {
+            "author": self.testuser.id,
+            "created_date": str(self.published_blogpost_test.created_date),
+            "published_date": str(self.published_blogpost_test.published_date), 
+            "text": "updated text",
+            "title": "updated title"
+        }
+
+        request = self.factory.put(self.api_path, data={
+            "author":self.testuser.id,
+            "title":"updated title",
+            "text":"updated text"
+            })
+        force_authenticate(request, user=self.testuser)
+        response = self.view(request, pk=self.published_blogpost_test.id)
         
+        #self.assertEqual(response.data, expected_response_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["author"], expected_response_data["author"])
+        self.assertEqual(response.data["text"], expected_response_data["text"])
+        self.assertEqual(response.data["title"], expected_response_data["title"])
+
+    def test_updating_blogpost_AUTH(self)->None:
+        """update a blogpost using another account"""
+        request = self.factory.put(self.api_path, data={
+            "author":self.testuser.id,
+            "title":"updated title",
+            "text":"updated text"
+            })
+        force_authenticate(request, user=self.testuser2)
+        response = self.view(request, pk=self.published_blogpost_test.id)
+        
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.data, {"detail":"You are not authorized to update this blogpost"})
+
+    def test_updating_blogpost_unauth(self)->None:
+        """update a blogpost unauthorized"""
+        request = self.factory.put(self.api_path, data={
+            "author":self.testuser.id,
+            "title":"updated title",
+            "text":"updated text"
+            })
+        response = self.view(request, pk=self.published_blogpost_test.id)
+        
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.data, {"detail":"You are not authorized to update this blogpost"})
+        
+    def test_updating_nonexistent_blogpost(self)->None:
+        """update a blogpost that does not exist"""
+        request = self.factory.put(self.api_path, data={
+            "author":self.testuser.id,
+            "title":"updated title",
+            "text":"updated text"
+            })
+        response = self.view(request, pk=0)
+        
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data, {"detail":"Not found."})
