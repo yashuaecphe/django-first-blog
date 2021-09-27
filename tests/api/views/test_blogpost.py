@@ -117,23 +117,49 @@ class TestBlogpost(APITestCase):
         response = self.view(request, pk=self.published_blogpost_test.id)
 
         #self.assertEqual(expected_response_data, response.data)
-        self.assertEqual(expected_response_data["author"], response.data["author"])
-        self.assertEqual(expected_response_data["created_date"][:10], response.data["created_date"][:10])
-        self.assertEqual(expected_response_data["published_date"][:10], response.data["published_date"][:10])
-        self.assertEqual(expected_response_data["text"], response.data["text"])
-        self.assertEqual(expected_response_data["title"], response.data["title"])
+        self.assertEqual(response.data["author"], expected_response_data["author"])
+        self.assertEqual(response.data["created_date"][:10], expected_response_data["created_date"][:10])
+        self.assertEqual(response.data["published_date"][:10], expected_response_data["published_date"][:10])
+        self.assertEqual(response.data["text"], expected_response_data["text"])
+        self.assertEqual(response.data["title"], expected_response_data["title"])
         self.assertEqual(response.status_code, 200)
 
     def test_viewing_unpublished_blogpost_OWNER(self)->None:
         """view an unpublished blogpost as the owner of that blogpost
             Only the author of that post can view it
         """
-        pass
+        expected_response_data = {
+            "author": self.testuser.id,
+            "created_date": str(self.unpublished_blogpost_test.created_date),
+            "text": self.unpublished_blogpost_test.text,
+            "title": self.unpublished_blogpost_test.title,
+        }
+        request = self.factory.get(self.api_path)
+        force_authenticate(request, user=self.testuser)
+        response = self.view(request, pk=self.unpublished_blogpost_test.id)
+        #self.assertEqual(response_data, expected_response_data)
+        self.assertEqual(response.data["author"], expected_response_data["author"])
+        self.assertEqual(response.data["created_date"][:10], expected_response_data["created_date"][:10])
+        self.assertEqual(response.data["published_date"], None)
+        self.assertEqual(response.data["text"], expected_response_data["text"])
+        self.assertEqual(response.data["title"], expected_response_data["title"])
+        self.assertEqual(response.status_code, 200)
+
 
     def test_viewing_unpublished_blogpost_AUTH(self)->None:
         """view an unpublished blogpost as some other user."""
-        pass
+        request = self.factory.get(self.api_path)
+        force_authenticate(request, user=self.testuser2)
+        response = self.view(request, pk=self.unpublished_blogpost_test.id)
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.data, {"detail":"You are not authorized to view this unpublished post"})
 
     def test_viewing_unpublished_blogpost_unauthorized(self)->None:
         """view an unpublished blogpost without authorization"""
-        pass
+        request = self.factory.get(self.api_path)
+        response = self.view(request, pk=self.unpublished_blogpost_test.id)
+        
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.data, {"detail":"You are not authorized to view this unpublished post"})
+        
