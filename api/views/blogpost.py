@@ -26,6 +26,7 @@ class BlogPostsAPI(APIView):
             if authenticated: list of all blogposts by the user (even unpublished ones)
             else: list of all published blogposts
         """
+        
         if request.user.is_authenticated:
             # if authenticated, will return all the posts of the user
             blogposts = BlogPost.objects.all().filter(author=request.user.id)
@@ -33,7 +34,7 @@ class BlogPostsAPI(APIView):
             return Response(serializer.data)
         else:
             # if not, will return all published posts
-            blogposts = BlogPost.objects.all().filter(published_date__lte=timezone.now())
+            blogposts = BlogPost.objects.filter(published_date__lte=timezone.now())
             serializer = BlogpostSerializer(blogposts, many=True)
             return Response(serializer.data)
     
