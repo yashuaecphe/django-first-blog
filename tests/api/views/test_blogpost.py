@@ -1,3 +1,5 @@
+import datetime
+
 from api.views.blogpost import BlogPostAPI, BlogPostsAPI
 from django.db.models import DateTimeField
 from django.utils import timezone
@@ -7,7 +9,7 @@ from rest_framework.test import APITestCase, APIRequestFactory
 from rest_framework.test import force_authenticate
 
 class TestBlogposts(APITestCase):
-    """testing api/blogposts."""
+    """testing /api/blogposts/ endpoint."""
     
     def setUp(self)->None:
         # if test user wasn't deleted previously (like test interrupted), delete it
@@ -56,7 +58,7 @@ class TestBlogposts(APITestCase):
         expected_author = self.testuser.id
         expected_title = data["title"]
         expected_text = data["text"]
-        expected_created_date = str(timezone.now())
+        expected_created_date = str(timezone.localtime(timezone.now()))
 
         request = self.factory.post(self.api_path, data)
         force_authenticate(request, user=self.testuser)
@@ -66,7 +68,7 @@ class TestBlogposts(APITestCase):
         self.assertEqual(response.data['author'], expected_author)
         self.assertEqual(response.data['title'], expected_title)
         self.assertEqual(response.data["text"], expected_text)
-        #self.assertEqual(response.data["created_date"], expected_created_date)
+        self.assertEqual(response.data["created_date"][0:10], expected_created_date[0:10])
 
     def test_posting_new_blogpost_unauthorized(self)->None:
         """testing POST unauthorized."""
@@ -75,3 +77,63 @@ class TestBlogposts(APITestCase):
         response = self.view(request)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.data, expected_response_data)
+
+class TestBlogpost(APITestCase):
+    """testing /api/blogpost/<int>/ endpoint"""
+
+    def setUp(self)->None:
+        self.factory = APIRequestFactory()
+        self.view = BlogPostAPI.as_view()
+        self.api_path = '/api/blogpost/<int:pk>/'
+
+        # if test user wasn't deleted previously (like test interrupted), delete it
+        testuser = User.objects.filter(username='testuser')
+        while len(testuser) > 0: testuser[0].delete()
+        #create a superuser
+        self.testuser = User.objects.create_user(username='testuser', password='testpass', is_superuser=True, is_staff=True)
+        self.testuser.save()
+
+        # if test user wasn't deleted previously (like test interrupted), delete it
+        testuser = User.objects.filter(username='testuser2')
+        while len(testuser) > 0: testuser[0].delete()
+        #create a superuser
+        self.testuser2 = User.objects.create_user(username='testuser2', password='testpass', is_superuser=True, is_staff=True)
+        self.testuser2.save()
+
+        self.published_blogpost_test = BlogPost.objects.create(author=self.testuser, title="published_blogpost_title",text="published_blogpost_text", published_date=timezone.now())
+        self.unpublished_blogpost_test = BlogPost.objects.create(author=self.testuser, title="unpublished_blogpost_title", text="unpublished_blogpost_text")
+
+    
+    def test_viewing_published_blogpost_unauthorized(self)->None:
+        """Un/Auth, you can view ANY published blogpost"""
+        expected_response_data = {
+            "author": self.testuser.id,
+            "created_date": str(self.published_blogpost_test.created_date),
+            "published_date": str(self.published_blogpost_test.published_date), 
+            "text": self.published_blogpost_test.text,
+            "title": self.published_blogpost_test.title
+        }
+        request = self.factory.get(self.api_path)
+        response = self.view(request, pk=self.published_blogpost_test.id)
+
+        #self.assertEqual(expected_response_data, response.data)
+        self.assertEqual(expected_response_data["author"], response.data["author"])
+        self.assertEqual(expected_response_data["created_date"][:10], response.data["created_date"][:10])
+        self.assertEqual(expected_response_data["published_date"][:10], response.data["published_date"][:10])
+        self.assertEqual(expected_response_data["text"], response.data["text"])
+        self.assertEqual(expected_response_data["title"], response.data["title"])
+        self.assertEqual(response.status_code, 200)
+
+    def test_viewing_unpublished_blogpost_OWNER(self)->None:
+        """view an unpublished blogpost as the owner of that blogpost
+            Only the author of that post can view it
+        """
+        pass
+
+    def test_viewing_unpublished_blogpost_AUTH(self)->None:
+        """view an unpublished blogpost as some other user."""
+        pass
+
+    def test_viewing_unpublished_blogpost_unauthorized(self)->None:
+        """view an unpublished blogpost without authorization"""
+        pass
