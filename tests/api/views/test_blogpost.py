@@ -229,3 +229,4 @@ class TestBlogpost(APITestCase):
         
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.data, {"detail":"Not found."})
+    
