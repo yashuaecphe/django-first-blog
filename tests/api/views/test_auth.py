@@ -19,7 +19,7 @@ class TestOAuth(APITestCase):
         self.view = ObtainAuthenticationToken.as_view()
 
     def test_obtaining_token_with_right_credentials(self)->None:
-        """testing api/obtain-token/ with correct credentials."""
+        """testing POST api/obtain-token/ with correct credentials."""
         expected_user = self.testuser
         expected_token = Token.objects.get_or_create(user=expected_user)[0]
         request = self.factory.post(self.api_path, {'username':'testuser','password':'testpass'})
@@ -33,13 +33,28 @@ class TestOAuth(APITestCase):
         self.assertEqual(recieved_username, expected_user.username)
 
     def test_obtaining_token_with_wrong_credentials(self)->None:
-        """testing api/obtain-token/ with wrong credentials"""
-        expected_user = self.testuser
-        expected_token = Token.objects.get_or_create(user=expected_user)[0]
+        """testing POST api/obtain-token/ with wrong credentials"""
         request = self.factory.post(self.api_path, {'username':'nonexistent','password':'nonexistent'})
         response = self.view(request)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.data["message"],"Invalid username/password")
+
+class TestUserList(APITestCase):
+    """for testing the UserList APIView."""
+    def setUp(self)->None:
+        self.factory = APIRequestFactory()
+        self.api_path = 'api/api-auth/'
+        self.view = UserList.as_view()
+    
+    def test_UserListAPIVIew(self)->None:
+        """testing GET api/api-auth/"""
+        expected_usernames = [user.username for user in User.objects.all()]
+        request = self.factory.get(self.api_path)
+        response = self.view(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(response.data,expected_usernames)
+
 
 
 
