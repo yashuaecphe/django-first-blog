@@ -5,8 +5,7 @@ from django.db.models import DateTimeField
 from django.utils import timezone
 from django.contrib.auth.models import User
 from myblogapp.models import BlogPost
-from rest_framework.test import APITestCase, APIRequestFactory
-from rest_framework.test import force_authenticate
+from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
 
 class TestBlogposts(APITestCase):
     """testing /api/blogposts/ endpoint."""
