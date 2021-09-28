@@ -1,4 +1,4 @@
-from api.views.blogcomment import Comments
+from api.views.blogcomment import BlogCommentsAPI
 from django.contrib.auth.models import User
 from myblogapp.models import BlogComment, BlogPost
 from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
@@ -8,8 +8,8 @@ class TestBlogcomments(APITestCase):
     
     def setUp(self)->None:
         self.factory = APIRequestFactory()
-        self.view = BlogPostAPI.as_view()
-        self.api_path = '/api/blogpost/<int:pk>/'
+        self.view = BlogCommentsAPI.as_view()
+        self.api_path = '/api/blogpost/<int:pk>/comments/'
 
         # if test user wasn't deleted previously (like test interrupted), delete it
         testuser = User.objects.filter(username='testuser')

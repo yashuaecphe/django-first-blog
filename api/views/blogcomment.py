@@ -22,16 +22,23 @@ class BlogCommentsAPI(APIView):
             list of all comments if the user is the owner of that blogpost
         """
         bp = self.get_blogpost(pk)
+        if bp.published_date is None: #unpublished
+            return Response(data={"detail":"This post is unpublished."}, status=status.HTTP_403_FORBIDDEN)
         comments = BlogComment.objects.filter(post=bp)
-        if (not request.user.is_authenticated) or (request.user!=bp.author): # not logged in, or logged in but not the author
+        if (not request.user.is_authenticated) or (request.user!=bp.author): # not the user
             comments = comments.filter(approved_comment=True)
         serializer = BlogcommentSerializer(comments, many=True)
         return Response(serializer.data)
     
     def post(self, request, pk, format=None):
-        """adds a comment"""
+        """adds a comment
+            shouldn't be able to add a comment to a blogpost that is unpublished
+        """
+        if self.get_blogpost(pk).published_date is None: #unpublished post
+            return Response(data={"detail":"This post is unpublished."}, status=status.HTTP_403_FORBIDDEN)
         serializer = BlogcommentSerializer(data=request.data, context={'request':request})
         if serializer.is_valid():
+            serializer.validated_data["approved_comment"] = False #to prevent client-forced approval
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
