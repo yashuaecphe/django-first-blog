@@ -230,3 +230,37 @@ class TestBlogpost(APITestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.data, {"detail":"Not found."})
     
+    def test_deleting_blogpost_OWNER(self)->None:
+        """delete a blogpost as the owner of that blogpost"""
+        DELETE_ID = self.unpublished_blogpost_test.id
+        request = self.factory.delete(self.api_path)
+        force_authenticate(request, user=self.testuser)
+        response = self.view(request, pk=DELETE_ID)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {"detail":f"Deleted post {DELETE_ID} successfully"})
+    
+
+    def test_deleting_blogpost_AUTH(self)->None:
+        """delete a blogpost as another user"""
+        DELETE_ID = self.published_blogpost_test.id
+        request = self.factory.delete(self.api_path)
+        force_authenticate(request, user=self.testuser2)
+        response = self.view(request, pk=DELETE_ID)
+        
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.data, {"detail":"You are not authorized to delete this blogpost"})
+
+    def test_deleting_blogpost_unauth(self)->None:
+        """delete a blogpost unauthorized"""
+        response = self.view(self.factory.delete(self.api_path), pk=self.published_blogpost_test.id)
+        
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.data, {"detail":"You are not authorized to delete this blogpost"})
+
+    def test_deleting_nonexistent_post(self)->None:
+        """delete a non-existent post."""
+        response = self.view(self.factory.delete(self.api_path), pk=0)
+        
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data, {"detail":"Not found."})
