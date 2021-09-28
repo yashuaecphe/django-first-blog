@@ -81,6 +81,11 @@ class TestBlogpost(APITestCase):
     """testing /api/blogpost/<int>/ endpoint"""
 
     def setUp(self)->None:
+        """for this test case we will need:
+        - 2 testusers
+        - 2 test blogposts owned by the first test user
+            one published, the other unpublished
+        """
         self.factory = APIRequestFactory()
         self.view = BlogPostAPI.as_view()
         self.api_path = '/api/blogpost/<int:pk>/'
@@ -99,6 +104,7 @@ class TestBlogpost(APITestCase):
         self.testuser2 = User.objects.create_user(username='testuser2', password='testpass', is_superuser=True, is_staff=True)
         self.testuser2.save()
 
+        #create test blogposts to test later
         self.published_blogpost_test = BlogPost.objects.create(author=self.testuser, title="published_blogpost_title",text="published_blogpost_text", published_date=timezone.now())
         self.unpublished_blogpost_test = BlogPost.objects.create(author=self.testuser, title="unpublished_blogpost_title", text="unpublished_blogpost_text")
 

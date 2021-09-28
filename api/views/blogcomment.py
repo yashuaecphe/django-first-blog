@@ -24,11 +24,13 @@ class BlogCommentsAPI(APIView):
         bp = self.get_blogpost(pk)
         if bp.published_date is None: #unpublished
             return Response(data={"detail":"This post is unpublished."}, status=status.HTTP_403_FORBIDDEN)
+
         comments = BlogComment.objects.filter(post=bp)
         if (not request.user.is_authenticated) or (request.user!=bp.author): # not the user
             comments = comments.filter(approved_comment=True)
+            
         serializer = BlogcommentSerializer(comments, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, pk, format=None):
         """adds a comment
